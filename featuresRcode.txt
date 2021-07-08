@@ -1,0 +1,47 @@
+#create function with the file name as 
+getFeatures=function(fasta)
+{
+  #unzip fasta in terminal 
+  #read the fasta into a variable
+  effector=read.fasta(fasta)
+  
+  #define empty matrix
+  total_matrix <- matrix(ncol=8, nrow=0)
+  colnames(total_matrix) <- c("d","e","f","i","l","s","t","v")
+  #print(total_matrix)
+  
+  #vector of names
+  names <- vector()
+  
+  #loop here
+  for (i in effector) {
+    #get name
+    names <- append(names, getName(i))
+    
+    #grab the last 20 amino acids of the sequence (CH1)
+    amino20 <- tail(i, 20)
+    #print(amino20)
+    
+    #pull the counts of amino acids (CH2)
+    myalph <- count(amino20, 1, alphabet = s2c("stilvfed"))
+    #print(myalph)
+    
+    #make vector
+    myvector <- as.vector(myalph)
+    #print(myvector)
+    
+    #add to the matrix
+    total_matrix <- rbind(total_matrix, myvector)
+  
+  }
+  #print(names)
+  options(max.print=1000000)
+  rownames(total_matrix) <- c(names)
+  print(total_matrix)
+  file_name <- paste(fasta, ".features", sep="")
+  file.create(file_name)
+  my_file <- file(file_name)
+  write.table(total_matrix, file=file_name)
+  close(my_file)
+  return(total_matrix)
+}
